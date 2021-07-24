@@ -23,6 +23,10 @@ def cal_viewpoint(poses_3d):
     print(type(poses_3d[0]))
     n_lp = poses_3d[0][0] - poses_3d[0][6]  # Neck - LHip
     n_rh = poses_3d[0][0] - poses_3d[0][12] # Neck - RHip
+    poses_direction = np.cross(n_lp,n_rh)
+    print(n_lp)
+    print(n_rh)
+    print(poses_direction)
 
 
     
