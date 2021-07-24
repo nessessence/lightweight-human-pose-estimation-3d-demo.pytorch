@@ -53,7 +53,7 @@ class Plotter3d:
         print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
 
         poses_direction_2d = np.dot(poses_direction, R)
-        print(f"pose_direction_2d: {pose_direction_2d}")
+        print(f"poses_direction_2d: {poses_direction_2d}")
 
 
         print(f"vertices_2d.shape: {vertices_2d.shape}")  
