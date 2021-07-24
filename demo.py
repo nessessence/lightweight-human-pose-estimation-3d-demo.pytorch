@@ -97,9 +97,11 @@ if __name__ == '__main__':
 
         inference_result = net.infer(scaled_img)
         poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
+        print(f"poses_3d.shape: {poses_3d.shape}")  # (1,76)
         edges = []
         if len(poses_3d):
             poses_3d = rotate_poses(poses_3d, R, t)
+            
             poses_3d_copy = poses_3d.copy()
             x = poses_3d_copy[:, 0::4]
             y = poses_3d_copy[:, 1::4]
@@ -107,7 +109,10 @@ if __name__ == '__main__':
             poses_3d[:, 0::4], poses_3d[:, 1::4], poses_3d[:, 2::4] = -z, x, -y
 
             poses_3d = poses_3d.reshape(poses_3d.shape[0], 19, -1)[:, :, 0:3]
+            print(f"poses_3d.shape: {poses_3d.shape}") # (1, 19, 3) keypoints of Panoptic dataset: https://github.com/CMU-Perceptual-Computing-Lab/panoptic-toolbox
+            print(poses_3d)
             edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
+            print(f"edges.shape {edges.shape}") # (17,2)
         plotter.plot(canvas_3d, poses_3d, edges)
         cv2.imshow(canvas_3d_window_name, canvas_3d)
 
