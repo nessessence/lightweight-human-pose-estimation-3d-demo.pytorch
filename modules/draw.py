@@ -49,17 +49,18 @@ class Plotter3d:
             cv2.line(img, tuple(axe[0]), tuple(axe[1]), (128, 128, 128), 1, cv2.LINE_AA)
 
     def _plot_edges(self, img, vertices, edges, R, poses_direction):
-        vertices_2d = np.dot(vertices, R)
-        print(f"R:\n{R}")
-        print(f"vertices_2d.shape: {vertices_2d.shape}")
+        vertices_2d = np.dot(vertices, R)  # shape: (1, 19, 2)
+        print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
+
+        print(f"vertices_2d.shape: {vertices_2d.shape}")  
         print(f"vertices_2d:\n {vertices_2d}")
 
-        
         edges_vertices = vertices_2d.reshape((-1, 2))[edges] * self.scale + self.origin
+        print(f"edges_vertices.shape: {edges_vertices.shape}")
         for edge_vertices in edges_vertices:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
+
 
     def _get_rotation(self, theta, phi):
         sin, cos = math.sin, math.cos
