@@ -60,7 +60,10 @@ class Plotter3d:
         for edge_vertices in edges_vertices:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
+
+        
         cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.line(img, tuple(self.scale + self.origin, np.array([0,0])) * tuple(self.scale + self.origin, np.array([100,100])) * self.scale + self.origin, (255, 255, 255), 1, cv2.LINE_AA)
 
 
     def _get_rotation(self, theta, phi):
