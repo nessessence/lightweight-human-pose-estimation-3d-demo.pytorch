@@ -157,7 +157,7 @@ if __name__ == '__main__':
             while (key != p_code
                    and key != esc_code
                    and key != space_code):
-                plotter.plot(canvas_3d, poses_3d, edges)
+                plotter.plot(canvas_3d, poses_3d, edges, poses_direction)
                 cv2.imshow(canvas_3d_window_name, canvas_3d)
                 key = cv2.waitKey(33)
             if key == esc_code:
