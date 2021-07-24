@@ -19,6 +19,14 @@ def rotate_poses(poses_3d, R, t):
 
     return poses_3d
 
+def cal_viewpoint(poses_3d):
+    print(type(poses_3d[0]))
+    n_lp = poses_3d[0] - poses_3d[6]  # Neck - LHip
+    n_rh = poses_3d[0] - poese_3d[12] # Neck - RHip
+
+
+    
+
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Lightweight 3D human pose estimation demo. '
@@ -111,6 +119,9 @@ if __name__ == '__main__':
             poses_3d = poses_3d.reshape(poses_3d.shape[0], 19, -1)[:, :, 0:3]
             print(f"poses_3d.shape: {poses_3d.shape}") # (1, 19, 3) keypoints of Panoptic dataset: https://github.com/CMU-Perceptual-Computing-Lab/panoptic-toolbox
             print(poses_3d)
+
+            cal_viewpoint(poses_3d)
+
             edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
             print(f"edges.shape {edges.shape}") # (17,2)
         plotter.plot(canvas_3d, poses_3d, edges)
