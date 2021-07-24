@@ -53,6 +53,7 @@ class Plotter3d:
         print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
 
         poses_direction_2d = np.dot(poses_direction, R)
+        print(f"poses_directon: {poses_direction}")
         print(f"poses_direction_2d: {poses_direction_2d}")
 
 
@@ -67,6 +68,7 @@ class Plotter3d:
         
         cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
         cv2.line(img, tuple((np.array([0,0])* self.scale + self.origin).astype(int)) , tuple((np.array([100,100])* self.scale + self.origin).astype(int)), (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.line(img, tuple((poses_direction_2d* self.scale + self.origin).astype(int)) , tuple(5*(poses_direction_2d* self.scale + self.origin).astype(int)), 1, cv2.LINE_AA)
 
 
     def _get_rotation(self, theta, phi):
