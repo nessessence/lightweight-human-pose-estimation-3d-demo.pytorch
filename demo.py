@@ -21,8 +21,8 @@ def rotate_poses(poses_3d, R, t):
 
 def cal_viewpoint(poses_3d):
     print(type(poses_3d[0]))
-    n_lp = poses_3d[0] - poses_3d[6]  # Neck - LHip
-    n_rh = poses_3d[0] - poese_3d[12] # Neck - RHip
+    n_lp = poses_3d[0][0] - poses_3d[0][6]  # Neck - LHip
+    n_rh = poses_3d[0][0] - poese_3d[0][12] # Neck - RHip
 
 
     
