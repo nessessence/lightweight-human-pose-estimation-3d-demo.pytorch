@@ -52,6 +52,10 @@ class Plotter3d:
         vertices_2d = np.dot(vertices, R)  # shape: (1, 19, 2)
         print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
 
+        poses_direction_2d = np.dot(poses_direction, R)
+        print(f"pose_direction_2d: {pose_direction_2d}")
+
+
         print(f"vertices_2d.shape: {vertices_2d.shape}")  
         print(f"vertices_2d:\n {vertices_2d}")
 
@@ -60,7 +64,6 @@ class Plotter3d:
         for edge_vertices in edges_vertices:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
-
         
         cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
         cv2.line(img, tuple((np.array([0,0])* self.scale + self.origin).astype(int)) , tuple((np.array([100,100])* self.scale + self.origin).astype(int)), (255, 255, 255), 1, cv2.LINE_AA)
