@@ -21,7 +21,7 @@ def rotate_poses(poses_3d, R, t):
 
 def cal_viewpoint(poses_3d):
     print(type(poses_3d[0]))
-    n_lp = poses_3d[0][0] - poses_3d[0][6]  # Neck - LHip
+    n_lp = poses_3d[0][0] - poses_3d[0][6]  # Neck - LHip  * 1st dim is x th person, we assume that we have only one person
     n_rh = poses_3d[0][0] - poses_3d[0][12] # Neck - RHip
     poses_direction = np.cross(n_lp,n_rh)
     print(n_lp)
@@ -122,12 +122,14 @@ if __name__ == '__main__':
 
             poses_3d = poses_3d.reshape(poses_3d.shape[0], 19, -1)[:, :, 0:3]
             print(f"poses_3d.shape: {poses_3d.shape}") # (1, 19, 3) keypoints of Panoptic dataset: https://github.com/CMU-Perceptual-Computing-Lab/panoptic-toolbox
-            print(poses_3d)
+            print(f"poses_3d:\n {poses_3d}")
 
             cal_viewpoint(poses_3d)
+            print(f"poses_3d.shape[0]: {poses_3d.shape[0]}")
 
             edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
             print(f"edges.shape {edges.shape}") # (17,2)
+            print(f"edges: {edges}")
         plotter.plot(canvas_3d, poses_3d, edges)
         cv2.imshow(canvas_3d_window_name, canvas_3d)
 
