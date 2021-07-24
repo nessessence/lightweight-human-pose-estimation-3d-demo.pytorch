@@ -33,13 +33,13 @@ class Plotter3d:
                                   [-axis_length / 2 + step_id * step, axis_length / 2, 0]], dtype=np.float32))
         self.axes = np.array(axes)
 
-    def plot(self, img, vertices, edges):
+    def plot(self, img, vertices, edges, poses_direction):
         global theta, phi
         img.fill(0)
         R = self._get_rotation(theta, phi)
         self._draw_axes(img, R)
         if len(edges) != 0:
-            self._plot_edges(img, vertices, edges, R)
+            self._plot_edges(img, vertices, edges, R, poses_direction)
 
     def _draw_axes(self, img, R):
         axes_2d = np.dot(self.axes, R)
@@ -48,12 +48,18 @@ class Plotter3d:
             axe = axe.astype(int)
             cv2.line(img, tuple(axe[0]), tuple(axe[1]), (128, 128, 128), 1, cv2.LINE_AA)
 
-    def _plot_edges(self, img, vertices, edges, R):
+    def _plot_edges(self, img, vertices, edges, R, poses_direction):
         vertices_2d = np.dot(vertices, R)
+        print(f"R:\n{R}")
+        print(f"vertices_2d.shape: {vertices_2d.shape}")
+        print(f"vertices_2d:\n {vertices_2d}")
+
+        
         edges_vertices = vertices_2d.reshape((-1, 2))[edges] * self.scale + self.origin
         for edge_vertices in edges_vertices:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
 
     def _get_rotation(self, theta, phi):
         sin, cos = math.sin, math.cos
