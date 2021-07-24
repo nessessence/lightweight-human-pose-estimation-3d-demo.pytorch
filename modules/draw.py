@@ -56,10 +56,11 @@ class Plotter3d:
         print(f"vertices_2d:\n {vertices_2d}")
 
         edges_vertices = vertices_2d.reshape((-1, 2))[edges] * self.scale + self.origin
-        print(f"edges_vertices.shape: {edges_vertices.shape}")
+        print(f"edges_vertices.shape: {edges_vertices.shape}")  # (17,2,2)
         for edge_vertices in edges_vertices:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
 
 
     def _get_rotation(self, theta, phi):
