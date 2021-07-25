@@ -54,8 +54,7 @@ class Plotter3d:
             scaled_vector = vector2d*self.scale+self.origin
             return tuple(scaled_vector.astype(int))
         def plane_proj(normal_v,u):
-            return tuple((u - (normal_v@u)/(normal_v@normal_v)*normal_v).astype(int))
-            
+            return u - (normal_v@u)/(normal_v@normal_v)*normal_v
         vertices_2d = np.dot(vertices, R)  # shape: (1, 19, 2)
         print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
 
