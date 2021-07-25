@@ -81,7 +81,7 @@ class Plotter3d:
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([0,1,0])), (0, 0, 255), 1, cv2.LINE_AA) # red
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([0,0,1])), (0, 255, 255), 1, cv2.LINE_AA) # yellow
 
-        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(0.6*plane_proj(np.array([0,0,1]),poses_direction)), (0, 255, 255), 1, cv2.LINE_AA)
+        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(-0.6*plane_proj(np.array([0,0,1]),poses_direction)), (255, 0, 255), 1, cv2.LINE_AA)
 
 
     def _get_rotation(self, theta, phi):
