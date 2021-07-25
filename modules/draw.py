@@ -70,12 +70,12 @@ class Plotter3d:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
         
-        cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.line(img, tuple((np.array([0,0])* self.scale + self.origin).astype(int)) , tuple((np.array([100,100])* self.scale + self.origin).astype(int)), (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.line(img, tuple((-0.2*poses_direction_2d* self.scale + self.origin).astype(int)) , tuple((-0.6*poses_direction_2d* self.scale + self.origin).astype(int)), (255,255,255),1,  cv2.LINE_AA)
-        cv2.line(img, tuple((vertices_2d[0][0]* self.scale + self.origin).astype(int)) , tuple(( (-0.6*poses_direction_2d+vertices_2d[0][0])* self.scale + self.origin).astype(int)), (0,255,0),1,  cv2.LINE_AA)
-        k = 100
-        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([1,0,0])), (255, 0, 0), 1, cv2.LINE_AA)
+        # cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
+        # cv2.line(img, tuple((np.array([0,0])* self.scale + self.origin).astype(int)) , tuple((np.array([100,100])* self.scale + self.origin).astype(int)), (255, 255, 255), 1, cv2.LINE_AA)
+        # cv2.line(img, tuple((-0.2*poses_direction_2d* self.scale + self.origin).astype(int)) , tuple((-0.6*poses_direction_2d* self.scale + self.origin).astype(int)), (255,255,255),1,  cv2.LINE_AA)
+        # cv2.line(img, tuple((vertices_2d[0][0]* self.scale + self.origin).astype(int)) , tuple(( (-0.6*poses_direction_2d+vertices_2d[0][0])* self.scale + self.origin).astype(int)), (0,255,0),1,  cv2.LINE_AA)
+        k = 200
+        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([1,0,0])), (255, 255, 0), 1, cv2.LINE_AA)
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([0,1,0])), (0, 0, 255), 1, cv2.LINE_AA)
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([0,0,1])), (0, 255, 255), 1, cv2.LINE_AA)
 
