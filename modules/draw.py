@@ -83,7 +83,7 @@ class Plotter3d:
 
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(-0.6*plane_proj(np.array([0,0,1]),poses_direction)), (255, 0, 255), 1, cv2.LINE_AA)
 
-        cv2.line(img, convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])), convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])+ (-0.6*plane_proj(np.array([0,0,1])),poses_direction)), (255, 0, 255), 1, cv2.LINE_AA)
+        cv2.line(img, convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])), convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])+ (-0.6*plane_proj(np.array([0,0,1]),poses_direction)), (255, 0, 255), 1, cv2.LINE_AA)
 
 
     def _get_rotation(self, theta, phi):
