@@ -49,6 +49,10 @@ class Plotter3d:
             cv2.line(img, tuple(axe[0]), tuple(axe[1]), (128, 128, 128), 1, cv2.LINE_AA)
 
     def _plot_edges(self, img, vertices, edges, R, poses_direction):
+        def convertTo2d(vector3d):
+            vector2d = np.dot(vector3d, R)
+            scaled_vector = vector2d*self.scale+self.origin
+            return tuple(scaled_vector.astype(int))
         vertices_2d = np.dot(vertices, R)  # shape: (1, 19, 2)
         print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
 
@@ -70,6 +74,9 @@ class Plotter3d:
         cv2.line(img, tuple((np.array([0,0])* self.scale + self.origin).astype(int)) , tuple((np.array([100,100])* self.scale + self.origin).astype(int)), (255, 255, 255), 1, cv2.LINE_AA)
         cv2.line(img, tuple((-0.2*poses_direction_2d* self.scale + self.origin).astype(int)) , tuple((-0.6*poses_direction_2d* self.scale + self.origin).astype(int)), (255,255,255),1,  cv2.LINE_AA)
         cv2.line(img, tuple((vertices_2d[0][0]* self.scale + self.origin).astype(int)) , tuple(( (-0.6*poses_direction_2d+vertices_2d[0][0])* self.scale + self.origin).astype(int)), (0,255,0),1,  cv2.LINE_AA)
+        cv2.line(img, convertTo2d(np.array([0,0,0])), 100*convertTo2d(np.array([1,0,0])), (255, 0, 0), 1, cv2.LINE_AA)
+        cv2.line(img, convertTo2d(np.array([0,0,0])), 100*convertTo2d(np.array([0,1,0])), (0, 0, 255), 1, cv2.LINE_AA)
+        cv2.line(img, convertTo2d(np.array([0,0,0])), 100*convertTo2d(np.array([0,0,1])), (0, 255, 255), 1, cv2.LINE_AA)
 
 
     def _get_rotation(self, theta, phi):
