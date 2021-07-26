@@ -52,9 +52,14 @@ class Plotter3d:
         def convertTo2d(vector3d):
             vector2d = np.dot(vector3d, R)
             scaled_vector = vector2d*self.scale+self.origin
-            return tuple(scaled_vector.astype(int))
+            return scaled_vector.astype(int)
         def plane_proj(normal_v,u):
             return u - (normal_v@u)/(normal_v@normal_v)*normal_v
+        def find_angle(u,v):
+            angle = np.degrees(np.arccos(v@u/(np.linalg.norm(u)*np.linalg.norm(v)))) 
+            if v[1] > 0: angle = 360 - angle # back: (angle > 180)
+            return angle
+
         vertices_2d = np.dot(vertices, R)  # shape: (1, 19, 2)
         print(f"R:\n{R}") #  [[ 0.70712316 -0.35353574] [-0.7070904  -0.35355213] [ 0.   -0.86603314]]
 
@@ -68,23 +73,60 @@ class Plotter3d:
 
         edges_vertices = vertices_2d.reshape((-1, 2))[edges] * self.scale + self.origin
         print(f"edges_vertices.shape: {edges_vertices.shape}")  # (17,2,2)
+        
         for edge_vertices in edges_vertices:
             edge_vertices = edge_vertices.astype(int)
             cv2.line(img, tuple(edge_vertices[0]), tuple(edge_vertices[1]), (255, 255, 255), 1, cv2.LINE_AA)
         
-        # cv2.line(img, (0,0), (100,100), (255, 255, 255), 1, cv2.LINE_AA)
-        # cv2.line(img, tuple((np.array([0,0])* self.scale + self.origin).astype(int)) , tuple((np.array([100,100])* self.scale + self.origin).astype(int)), (255, 255, 255), 1, cv2.LINE_AA)
-        # cv2.line(img, tuple((-0.2*poses_direction_2d* self.scale + self.origin).astype(int)) , tuple((-0.6*poses_direction_2d* self.scale + self.origin).astype(int)), (255,255,255),1,  cv2.LINE_AA)
-        cv2.line(img, tuple((vertices_2d[0][0]* self.scale + self.origin).astype(int)) , tuple(( (-0.6*poses_direction_2d+vertices_2d[0][0])* self.scale + self.origin).astype(int)), (0,255,0),1,  cv2.LINE_AA)
-        k = 200
+
+        k = 300
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([1,0,0])), (255, 255, 0), 1, cv2.LINE_AA) # sky blue
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([0,1,0])), (0, 0, 255), 1, cv2.LINE_AA) # red
         cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(k*np.array([0,0,1])), (0, 255, 255), 1, cv2.LINE_AA) # yellow
+        cv2.line(img, convertTo2d(k*np.array([-1,0,0])), convertTo2d(k*np.array([0,0,0])), (3, 65, 130), 3 , cv2.LINE_AA) # brown
+        
+        # represent view direction using neck-lhip & neck-rhip
+        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(-0.6*plane_proj(np.array([0,0,1]),poses_direction)), (255, 0, 255), 1, cv2.LINE_AA) # neck and both shoudlers projected_plot@origin
+        cv2.line(img, convertTo2d(vertices[0][0]) ,  convertTo2d(-0.6*poses_direction+vertices[0][0]), (255,0,255),1,cv2.LINE_AA)   # neck and both shoudlers plot@neck
+        cv2.line(img, convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])), convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])+ (-0.6*plane_proj(np.array([0,0,1]),poses_direction))), (255, 0, 255), 1, cv2.LINE_AA) # neck and both shoudlers plot@projected_neck
+        neck_hip_angle = find_angle(np.array([-1,0,0]),-0.6*plane_proj(np.array([0,0,1]),poses_direction))
+        print(f"neck-hip angle: {neck_hip_angle}")
+        cv2.putText(img,f"neck-hip angle: {neck_hip_angle} degree", (35,40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
 
-        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(-0.6*plane_proj(np.array([0,0,1]),poses_direction)), (255, 0, 255), 1, cv2.LINE_AA)
+        # represent view direction using both sides of shoulder
+        # l_shoulder = vertices[0][3]; r_shoulder = vertices[0][9]
+        # shoulderline = l_shoulder - r_shoulder
+        # projected_shoulderline = plane_proj(np.array([0,0,1]), shoulderline)
+        # print(f"projected_shoulderline: {projected_shoulderline}")
+        # projected_shoulderline_2d = convertTo2d(projected_shoulderline)
+        # # perpen_shoulderline_2d = np.array([-projected_shoulderline_2d[1], projected_shoulderline_2d[0]]) # 2d perpendicular, also we can only find a one solution in 2d space: https://gamedev.stackexchange.com/questions/70075/how-can-i-find-the-perpendicular-to-a-2d-vector
+        # perpen_shoulderline_2d = np.array([[0,-1],[1,0]])@projected_shoulderline_2d
+        # print(f"perpen_shoulderline_2d: {perpen_shoulderline_2d}")
+        # cv2.line(img, convertTo2d(np.array([0,0,0])), projected_shoulderline_2d.astype(int) , (0, 255, 0), 2, cv2.LINE_AA)
+        # cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(200* np.array([-projected_shoulderline_2d[1], projected_shoulderline_2d[0],0])).astype(int) , (0, 255, 0), 2, cv2.LINE_AA) 
+        # cv2.line(img, convertTo2d(np.array([0,0,0])), (200*perpen_shoulderline_2d).astype(int) , (0, 255, 0), 2, cv2.LINE_AA)  #both shoudlers projected_plot@origin
+        # cv2.line(img, convertTo2d(vertices[0][0]) , (0.6*perpen_shoulderline_2d + convertTo2d(vertices[0][0])).astype(int), (0,255,0),1,cv2.LINE_AA)   # neck and both shoudlers plot@neck
+        # cv2.line(img, convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])),(np.array(convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])))+200*perpen_shoulderline_2d).astype(int) , (0, 255, 0), 1, cv2.LINE_AA) # both shoudlers plot@projected_neck
+        # shoulders_angle = find_angle(np.array([-1,0]),0.6*projected_shoulderline_2d)
+        # print(f"shoulders-angle: {shoulders_angle}")
+        # cv2.putText(img,f"shoulders-angle: {shoulders_angle} degree", (35,60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
 
-        cv2.line(img, convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])), convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])+ (-0.6*plane_proj(np.array([0,0,1]),poses_direction))), (255, 0, 255), 1, cv2.LINE_AA)
 
+        # represent view direction:  neck--body_center x l_shoulder--r_shoulder
+        l_shoulder = vertices[0][3]; r_shoulder = vertices[0][9]
+        neck = vertices[0][0]; bcenter = vertices[0][2]
+        shoulderline = l_shoulder - r_shoulder
+        neck_bcenter_line = neck - bcenter
+        poses_direction =  np.cross(shoulderline,neck_bcenter_line)
+        cv2.line(img, convertTo2d(np.array([0,0,0])), convertTo2d(0.6*plane_proj(np.array([0,0,1]),poses_direction)), (165, 230, 45), 1, cv2.LINE_AA) # neck and both shoudlers projected_plot@origin
+        cv2.line(img, convertTo2d(vertices[0][0]) ,  convertTo2d(0.6*poses_direction+vertices[0][0]), (165, 230, 45),1,cv2.LINE_AA)   # neck and both shoudlers plot@neck
+        cv2.line(img, convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])), convertTo2d(plane_proj(np.array([0,0,1]),vertices[0][0])+ (0.6*plane_proj(np.array([0,0,1]),poses_direction))),(165, 230, 45), 1, cv2.LINE_AA) # neck and both shoudlers plot@projected_neck
+        neckbcenter_shoulders_angle = find_angle(np.array([-1,0,0]),0.6*plane_proj(np.array([0,0,1]),poses_direction))
+        print(f"neck-bcenter_shoulders angle: {neckbcenter_shoulders_angle}")
+        cv2.putText(img,f"neck-bcenter_shoulders angle:: {neckbcenter_shoulders_angle} degree", (35,80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
+        
+
+        
 
     def _get_rotation(self, theta, phi):
         sin, cos = math.sin, math.cos
