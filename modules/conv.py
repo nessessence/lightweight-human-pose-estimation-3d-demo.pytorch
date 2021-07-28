@@ -9,7 +9,7 @@ def conv(in_channels, out_channels, kernel_size=3, padding=1, bn=True, dilation=
         modules.append(nn.ReLU(inplace=True))
     return nn.Sequential(*modules)
 
-
+# Depthwise Separable Convolution from MobileNet's paper
 def conv_dw(in_channels, out_channels, kernel_size=3, padding=1, stride=1, dilation=1):
     return nn.Sequential(
         nn.Conv2d(in_channels, in_channels, kernel_size, stride, padding, dilation=dilation, groups=in_channels, bias=False),
